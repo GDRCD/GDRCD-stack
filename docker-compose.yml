@@ -1,0 +1,29 @@
+version: "3.7"
+
+services:
+
+  database:
+    build:
+      context: "./.docker/database"
+    image: "${PROJECT}_database"
+    container_name: "${PROJECT}_database"
+    #restart: // always;unless-stopped
+    ports:
+      - "${DB_PORT}:3306"
+    volumes:
+      - ./data/database:/var/lib/mysql
+      - ./logs/database:/var/log/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    networks:
+      - gdr-net
+
+
+
+
+networks:
+  gdr-net:
+    driver: bridge
