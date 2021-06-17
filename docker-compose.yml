@@ -14,8 +14,9 @@ services:
     environment:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-    networks:
-        - gdr-net
+    depends_on:
+      database:
+        condition: service_healthy
 
   web:
     build:
@@ -29,10 +30,9 @@ services:
       - ./services/${PHP_SERVICE}:/var/www/service
       - ./.docker/web/conf.d:/etc/nginx/conf.d
       - ./logs/web:/var/log/nginx
+      - phpmyadmindata:/var/www/phpmyadmin
     depends_on:
       - php
-    networks:
-      - gdr-net
 
   database:
     build:
@@ -44,18 +44,32 @@ services:
       - "${DB_PORT}:3306"
     volumes:
       - ./.docker/database/conf.d/my.cnf:/etc/mysql/conf.d/my.cnf
-      - ./data/database:/var/lib/mysql
+      - databasedata:/var/lib/mysql
       - ./logs/database:/var/log/mysql
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-    depends_on:
-      - php
-    networks:
-      - gdr-net
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u root --password=$$MYSQL_ROOT_PASSWORD
+      interval: 5s
+      retries: 10
 
-networks:
-  gdr-net:
-    driver: bridge
+  phpmyadmin:
+    build:
+      context: "./.docker/phpmyadmin"
+    image: "${PROJECT}_phpmyadmin"
+    container_name: "${PROJECT}_phpmyadmin"
+    volumes:
+      - phpmyadmindata:/var/www/html
+    environment:
+      PMA_HOST: database
+    depends_on:
+      database:
+        condition: service_healthy
+
+# Volumes
+volumes:
+  databasedata:
+  phpmyadmindata:
