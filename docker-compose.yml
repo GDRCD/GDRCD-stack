@@ -2,6 +2,22 @@ version: "3.7"
 
 services:
 
+  php:
+    build:
+      context: "./.docker/php"
+    image: "${PROJECT}_php"
+    container_name: "${PROJECT}_php"
+    ports:
+      - 9000:9000
+    volumes:
+      - ./services/${PHP_SERVICE}:/srv/www/api
+      - ./config/php/www.conf:/usr/local/etc/php-fpm.d/www.conf
+    environment:
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    networks:
+        - gdr-net
+
   database:
     build:
       context: "./.docker/database"
@@ -18,11 +34,10 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    depends_on:
+      - php
     networks:
       - gdr-net
-
-
-
 
 networks:
   gdr-net:
