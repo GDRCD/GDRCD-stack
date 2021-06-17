@@ -27,6 +27,7 @@ services:
       - "${WEB_PORT}:80"
     volumes:
       - ./services/${PHP_SERVICE}:/srv/www/gdr
+      - ./logs/web:/var/log/nginx
     depends_on:
       - php
 

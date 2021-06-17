@@ -9,6 +9,7 @@ data/*
 # LOGS
 logs/*
 !logs/database/.gitkeep
+!logs/web/.gitkeep
 
 # SERVICES
 services/*
