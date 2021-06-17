@@ -1,3 +1,6 @@
-FROM php:7.2-fpm
+FROM php:7.2-fpm-alpine
 
-RUN docker-php-ext-install mysqli
+WORKDIR /var/www/service/
+
+RUN docker-php-ext-install pdo_mysql mysqli
+

@@ -1,4 +1,4 @@
-version: "3.7"
+version: "3.8"
 
 services:
 
@@ -10,8 +10,7 @@ services:
     ports:
       - 9000:9000
     volumes:
-      - ./services/${PHP_SERVICE}:/srv/www/gdr
-      - ./config/php/www.conf:/usr/local/etc/php-fpm.d/www.conf
+      - ./services/${PHP_SERVICE}:/var/www/service
     environment:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
@@ -20,16 +19,20 @@ services:
 
   web:
     build:
-      context: "./.docker/web"
+      context: .
+      dockerfile: .docker/web/Dockerfile
     image: "${PROJECT}_web"
     container_name: "${PROJECT}_web"
     ports:
       - "${WEB_PORT}:80"
     volumes:
-      - ./services/${PHP_SERVICE}:/srv/www/gdr
+      - ./services/${PHP_SERVICE}:/var/www/service
+      - ./.docker/web/conf.d:/etc/nginx/conf.d
       - ./logs/web:/var/log/nginx
     depends_on:
       - php
+    networks:
+      - gdr-net
 
   database:
     build:
@@ -40,6 +43,7 @@ services:
     ports:
       - "${DB_PORT}:3306"
     volumes:
+      - ./.docker/database/conf.d/my.cnf:/etc/mysql/conf.d/my.cnf
       - ./data/database:/var/lib/mysql
       - ./logs/database:/var/log/mysql
     environment:
