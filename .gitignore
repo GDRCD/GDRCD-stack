@@ -4,11 +4,11 @@
 
 # MYSQL
 data/*
-!data/.gitkeep
+!data/database/.gitkeep
 
 # LOGS
 logs/*
-!logs/.gitkeep
+!logs/database/.gitkeep
 
 # SERVICES
 services/*
