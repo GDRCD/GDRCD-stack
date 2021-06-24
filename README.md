@@ -31,7 +31,7 @@ git clone --branch {nome-branch} https://github.com/Kasui92/gdr-stack [OPZ: cart
 
 Di seguito l'elenco degli engine supportati, con i relativi stack: 
 
-- [GDRCD#5.5.1](https://github.com/Kasui92/gdr-stack/tree/gdrcd)
+- [GDRCD#5.5.1](https://github.com/Kasui92/gdr-stack/tree/gdrcd-5.x)
 - [GDR Reborn](https://github.com/Kasui92/gdr-stack/tree/gdr-rebord)
 - [...WIP]
 
