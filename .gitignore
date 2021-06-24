@@ -1,0 +1,15 @@
+# IDE
+.idea
+.vscode
+
+# LOGS
+logs/*
+!logs/database/.gitkeep
+!logs/web/.gitkeep
+
+# SERVICES
+services/*
+!services/.gitkeep
+
+#ENV
+.env
