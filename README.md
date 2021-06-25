@@ -43,6 +43,15 @@ Di seguito l'elenco degli engine supportati, con i relativi stack:
 
 [WiP]
 
+## Riferimenti
+
+Di seguito gli engine di riferimento per la creazione di GdR Play-by-Chat:
+
+- [GDRCD#5.5.1](https://github.com/GDRCD/GDRCD) © GDRCD Organization, licenza CC
+- [GDR Reborn](https://github.com/gianni10049/gdr-reborn-engine) © [gianni10049](https://github.com/gianni10049), licenza MIT
+
+[WiP]
+
 ## Licenza
 [MIT](https://choosealicense.com/licenses/mit/)
 
