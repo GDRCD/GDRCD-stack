@@ -33,7 +33,7 @@ occorrerà modificare la root nel file di configurazione.
 
 Copiare il file `sample.env` in un nuovo file `.env` e compilare le varie variabili presenti.
 
-Copiare il file `example.php.conf` in un nuovo file `php.conf` e modificare il campo `root` in base al path del progetto dentro `services`.
+Copiare il file `example.php.conf` in un nuovo file `php.conf` dentro `.docker/web/conf.d` e modificare il campo `root` in base al path del progetto dentro `services`.
 Se il progetto è stato inserito direttamente dentro a `services`, allora `root` sarà `/var/www/service`, se invece è dentro una sottocartella
 allora sarà `/var/www/service/{NOME_SOTTOCARTELLA}`.
 
@@ -48,6 +48,7 @@ Per stoppare lo strumento, eseguire `docker-compose down` nel terminale bash ape
 
 Per effettuare un avvio pulito delle immagini e dei container di GDR-Stack (questo processo non compromette i volumi creati in precedenza!),
 eseguire `docker-compose down --rmi all && docker-compose up -d` nel terminale bash aperto sulla root di GDR-STACK.
+
 
 ## Progetti Multipli
 
@@ -81,7 +82,7 @@ Es:
 server {
     listen      {//NUOVA_PORTA};
     listen      [::]:{//NUOVA_PORTA};
-    server_name gdrcd.test;
+    server_name _;
     root        /var/www/service/{NOME_SOTTOCARTELLA2};
     index       index.php;
 
