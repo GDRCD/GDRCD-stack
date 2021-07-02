@@ -4,7 +4,7 @@
 Lo scopo di GDR-Stack è di fornire un basilare ambiente di sviluppo per i principali engine Open Source di Giochi di Ruolo play-by-chat, 
 garantendo gli strumenti necessari per qualsiasi esigenza.
 
-Si tratta esclusivamente di ambienti focaluzzati alla creazione del mock up del sito web, pertanto 
+Si tratta esclusivamente di ambienti focalizzati alla creazione del mock up del sito web, pertanto 
 non sono integrati soluzioni per la produzione e nemmeno strumenti per la pipeline.
 
 
