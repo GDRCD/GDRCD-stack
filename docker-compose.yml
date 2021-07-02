@@ -26,10 +26,12 @@ services:
     container_name: "${PROJECT}_web"
     ports:
       - "${WEB_PORT}:80"
+      - "${PMA_PORT}:8080"
     volumes:
       - ./services/${PHP_SERVICE}:/var/www/service
       - ./.docker/web/conf.d:/etc/nginx/conf.d
       - ./logs/web:/var/log/nginx
+      - phpmyadmindata:/var/www/phpmyadmin
     depends_on:
       - php
 
@@ -55,6 +57,21 @@ services:
       interval: 5s
       retries: 10
 
+  phpmyadmin:
+    build:
+      context: "./.docker/phpmyadmin"
+    image: "${PROJECT}_phpmyadmin"
+    container_name: "${PROJECT}_phpmyadmin"
+    volumes:
+      - phpmyadmindata:/var/www/html
+    environment:
+      PMA_HOST: database
+    depends_on:
+      database:
+        condition: service_healthy
+
+
 # Volumes
 volumes:
   databasedata:
+  phpmyadmindata:
