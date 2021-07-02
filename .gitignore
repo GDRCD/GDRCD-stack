@@ -2,6 +2,9 @@
 .idea
 .vscode
 
+# CONF
+.docker/web/conf.d/php.conf
+
 # LOGS
 logs/*
 !logs/database/.gitkeep
