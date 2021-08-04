@@ -76,7 +76,7 @@ services:
       context: "./.docker/mailhog"
     image: "${PROJECT}_mailhog"
     container_name: "${PROJECT}_mailhog"
-    restart: always
+    #restart: always
     ports:
       - "${MAILHOG_PORT}:8025"
 
