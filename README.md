@@ -57,6 +57,9 @@ Questo servizio di GDR-Stack supporta più progetti.
 Puoi aggiungere un nuovo progetto sottoforma di una nuova sottocartella dentro `services`.
 N.B.: in questo caso, sarà necessario impostare `PHP_SERVICE` vuota.
 
+Occorre quindi modificare il riferimento al server di default impostando per il valore `root` il path del progetto iniziale
+(es. `/var/www/service/{NOME_SOTTOCARTELLA}`) .
+
 Successivamente, occorre predisporre una nuova `WEB_PORT` nel proprio file `.env` e poi riportarlo nel file `docker-compose.yml`.
 
 Ad esempio:
@@ -111,7 +114,7 @@ tra le varie [issues](https://github.com/Kasui92/gdr-stack/labels/gdrcd-5.x). Se
 
 Di seguito gli engine di riferimento per la creazione di GdR Play-by-Chat:
 
-- [GDRCD#5.5.1](https://github.com/GDRCD/GDRCD) © GDRCD Organization, licenza CC
+- [GDRCD#5.5](https://github.com/GDRCD/GDRCD) © GDRCD Organization, licenza CC
 
 ## Licenza
 [MIT](https://choosealicense.com/licenses/mit/)

@@ -3,7 +3,7 @@
 .vscode
 
 # CONF
-.docker/web/conf.d/php.conf
+# .docker/web/conf.d/php.conf
 
 # LOGS
 logs/*
