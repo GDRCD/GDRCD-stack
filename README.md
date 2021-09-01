@@ -31,9 +31,8 @@ git clone --branch {nome-branch} https://github.com/Kasui92/gdr-stack [OPZ: cart
 
 Di seguito l'elenco degli engine supportati, con i relativi stack: 
 
-- [GDRCD#5.5.1](https://github.com/Kasui92/gdr-stack/tree/gdrcd-5.x)
-- [GDR Reborn](https://github.com/Kasui92/gdr-stack/tree/gdr-rebord)
-- [...WIP]
+- [GDRCD#5.5](https://github.com/Kasui92/gdr-stack/tree/gdrcd/5.5)
+- [GDR Reborn](https://github.com/Kasui92/gdr-stack/tree/gdr-rebord/dev)
 
 ## Segnalazione bug e richieste di aiuto
 
@@ -47,7 +46,7 @@ Di seguito l'elenco degli engine supportati, con i relativi stack:
 
 Di seguito gli engine di riferimento per la creazione di GdR Play-by-Chat:
 
-- [GDRCD#5.5.1](https://github.com/GDRCD/GDRCD) © GDRCD Organization, licenza CC
+- [GDRCD#5.5](https://github.com/GDRCD/GDRCD) © GDRCD Organization, licenza CC
 - [GDR Reborn](https://github.com/gianni10049/gdr-reborn-engine) © [gianni10049](https://github.com/gianni10049), licenza MIT
 
 [WiP]
