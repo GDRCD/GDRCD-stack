@@ -1,8 +1,6 @@
 # Create image based on the official PHP-FMP image
 FROM php:5.6-fpm
 
-ENV DEBIAN_FRONTEND noninteractive
-
 # Arguments defined in docker-compose.yml
 ARG uid
 
@@ -62,13 +60,11 @@ RUN echo "Install Redis" \
     && pecl install redis-2.2.8 \
     && docker-php-ext-enable redis
 
-# Clean up, try to reduce image size (much as you can on Debian..)
+# Clean up, try to reduce image size
 RUN apt-get autoremove -y \
   && apt-get clean all \
   && rm -rf /var/lib/apt/lists/* \
-  && rm -rf /usr/share/doc /usr/share/man /usr/share/locale \
-  && rm -f /usr/local/etc/php-fpm.d/*.conf \
-  && rm -rf /usr/src/php
+  && rm -rf /tmp/*
 
 # Add user for web application
 RUN groupadd -g $uid www
