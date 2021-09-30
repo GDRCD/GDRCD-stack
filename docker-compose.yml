@@ -13,7 +13,7 @@ services:
       - '9000:9000'
     volumes:
       - ./.docker/php/conf.d:/usr/local/etc/php/conf.d
-      - ./service/:/var/www/html
+      - ./service:/var/www/html
     environment:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
@@ -28,7 +28,7 @@ services:
       - "${NGINX_PORT}:80"
       - "${PMA_PORT}:8080"
     volumes:
-      - ./service/:/var/www/html
+      - ./service:/var/www/html
       - ./.docker/nginx/conf.d:/etc/nginx/conf.d
       - ./logs/nginx:/var/log/nginx
       - phpmyadmindata:/var/www/phpmyadmin
