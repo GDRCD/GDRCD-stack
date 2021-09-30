@@ -19,23 +19,20 @@ Di seguito, gli indirizzi con i riferimenti per l'installazione di questi strume
 
 ## Come iniziare
 
-Per utilizzare gli GDR-Stack, seleziona dall'indice che trovi poco più sotto lo stack desiderato, in base all'engine che si è scelto
-di utilizzare ( in questo caso GDRCD#5.x). Una volta aperta la pagina con il progetto, sarà sufficiente scaricare il progetto in formato ZIP o clonarlo tramite GIT.
+Per utilizzare GDRCD-stack, clona il progetto in una qualsiasi cartella sul tuo PC. Puoi farlo scaricando l'intero progetto compresso in una cartella zip oppure utilizzando GIT ed eseguendo il seguente comando:
 
-Di seguito un esempio di comando GIT CLONE:
-
-```shell
-git clone --branch gdrcd-5.x https://github.com/Kasui92/gdr-stack [OPZ: cartella in cui salvare lo stack]
 ```
+git clone https://github.com/Kasui92/gdrcd-stack.git 
+```
+Il comando salverà in una cartella `gdrcd-stack` l'intera struttura dello stack. Puoi inserirlo in una cartella a tuo piacimento, aggiungendo in fondo al comando sopra indicato il nome della cartella desiderata (qualora non sia presente, la crea in automatico).
 
-Salvato il progetto, occorre inserire l'engine ( o il progetto già realizzato ) dentro la cartella `services`.
+Salvato il progetto, occorre inserire l'engine ( o il progetto già realizzato ) dentro la cartella `service`.
 Il processo può essere inserito direttamente dentro questa cartella o in una sottocartella. In quest'ultimo caso, 
 occorrerà modificare la root nel file di configurazione.
 
 Copiare il file `sample.env` in un nuovo file `.env` e compilare le varie variabili presenti.
 
-Ora il tuo GDR-Stack è pronto e funzionante!!
-
+Ora il tuo GDRCD-Stack è pronto e funzionante!!
 
 ## Comandi Utili 
 
