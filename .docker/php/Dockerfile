@@ -66,6 +66,7 @@ RUN apt-get autoremove -y \
   && rm -rf /var/lib/apt/lists/* \
   && rm -rf /tmp/*
 
+
 # Add user for web application
 RUN groupadd -g $uid www
 RUN useradd -u $uid -ms /bin/bash -g www www
