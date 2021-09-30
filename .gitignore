@@ -11,8 +11,8 @@ logs/*
 !logs/web/.gitkeep
 
 # SERVICES
-services/*
-!services/.gitkeep
+service
+!service/.gitkeep
 
 #ENV
 .env
