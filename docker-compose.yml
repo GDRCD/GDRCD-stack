@@ -12,7 +12,7 @@ services:
     ports:
       - '9000:9000'
     volumes:
-      - ./.docker/php/conf.d:/usr/local/etc/php/conf.d
+      - ./.docker/php/conf.d:/usr/local/etc/php-5/conf.d
       - ./service:/var/www/html
     environment:
       MYSQL_USER: ${MYSQL_USER}
