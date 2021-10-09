@@ -62,14 +62,22 @@ services:
     environment:
       PMA_HOST: database
 
-  mailhog:
-    build:
-      context: "./.docker/mailhog"
-    image: "${PROJECT}_mailhog"
-    container_name: "${PROJECT}_mailhog"
-    #restart: always
+#  mailhog:
+#    build:
+#      context: "./.docker/mailhog"
+#    image: "${PROJECT}_mailhog"
+#    container_name: "${PROJECT}_mailhog"
+#    #restart: always
+#    ports:
+#      - "${MAILHOG_PORT}:8025"
+
+  postfix:
+    image: "eeacms/postfix"
+    container_name: "${PROJECT}_postfix"
     ports:
-      - "${MAILHOG_PORT}:8025"
+      - "${POSTFIX_PORT}:25"
+    environment:
+      MTP_HOST: ${MTP_HOST}
 
 # Volumes
 volumes:
