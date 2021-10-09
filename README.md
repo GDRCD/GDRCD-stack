@@ -22,7 +22,7 @@ Di seguito, gli indirizzi con i riferimenti per l'installazione di questi strume
 Per utilizzare GDRCD-stack, clona il progetto in una qualsiasi cartella sul tuo PC. Puoi farlo scaricando l'intero progetto compresso in una cartella zip oppure utilizzando GIT ed eseguendo il seguente comando:
 
 ```
-git clone https://github.com/Kasui92/gdrcd-stack.git 
+git clone https://github.com/GDRCD/GDRCD-stack.git
 ```
 Il comando salverà in una cartella `gdrcd-stack` l'intera struttura dello stack. Puoi inserirlo in una cartella a tuo piacimento, aggiungendo in fondo al comando sopra indicato il nome della cartella desiderata (qualora non sia presente, la crea in automatico).
 
