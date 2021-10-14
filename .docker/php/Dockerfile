@@ -12,12 +12,24 @@ RUN apt-get -y --no-install-recommends install --fix-missing \
     git nano wget dialog \
     apt-utils build-essential \
     zip openssl curl \
+    libmcrypt4 \
+    libvpx4 \
+    libfreetype6 \
+    libjpeg62-turbo \
+    libpng16-16 \
+    libxpm4 \
     libsqlite3-dev \
     libsqlite3-0 \
-    default-mysql-client \
+    mysql-client \
+    libmcrypt-dev \
     zlib1g-dev \
     libzip-dev \
     libicu-dev \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    libxpm-dev \
+    libvpx-dev \
     libonig-dev \
     libcurl3-dev \
     libcurl3-openssl-dev \
@@ -34,7 +46,11 @@ RUN echo "Installing PHP extensions" && \
     docker-php-ext-install json && \
     docker-php-ext-install zip && \
     docker-php-ext-install mbstring && \
-    docker-php-ext-install gettext
+    docker-php-ext-install gettext && \
+    docker-php-ext-install mcrypt  && \
+    docker-php-ext-install opcache && \
+    docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-xpm-dir=/usr/include/ --with-vpx-dir=/usr/include/ && \
+    docker-php-ext-install gd
 
 # Other PHP5.6 Extensions
 RUN echo "Enabling PHP extensions" && \
@@ -60,8 +76,13 @@ RUN echo "Install Redis" \
     && pecl install redis-2.2.8 \
     && docker-php-ext-enable redis
 
+# Install sendmailer for Mailhog
+RUN  curl --location --output /usr/local/bin/mhsendmail https://github.com/mailhog/mhsendmail/releases/download/v0.2.0/mhsendmail_linux_amd64  \
+     && chmod +x /usr/local/bin/mhsendmail
+
 # Clean up, try to reduce image size
-RUN apt-get autoremove -y \
+RUN apt-get remove -y libmcrypt-dev libicu-dev libpng-dev libjpeg-dev libfreetype6-dev libxpm-dev libvpx-dev gcc gcc-6 \
+  && apt-get autoremove -y \
   && apt-get clean all \
   && rm -rf /var/lib/apt/lists/* \
   && rm -rf /tmp/*
