@@ -4,13 +4,11 @@ services:
 
   php:
     build:
-      context: "./.docker/php"
+      context: "services/php"
       args:
         uid: "${UID}"
     image: "${PROJECT}_php"
     container_name: "${PROJECT}_php"
-    ports:
-      - '9000:9000'
     volumes:
       - ./.docker/php/conf.d:/usr/local/etc/php/conf.d:ro
       - ./service:/var/www/html
@@ -20,8 +18,7 @@ services:
 
   nginx:
     build:
-      context: .
-      dockerfile: .docker/nginx/Dockerfile
+      context: "services/nginx"
     image: "${PROJECT}_nginx"
     container_name: "${PROJECT}_nginx"
     ports:
@@ -37,7 +34,7 @@ services:
 
   database:
     build:
-      context: "./.docker/database"
+      context: "services/database"
     image: "${PROJECT}_database"
     container_name: "${PROJECT}_database"
     #restart: // always;unless-stopped
@@ -54,7 +51,7 @@ services:
 
   phpmyadmin:
     build:
-      context: "./.docker/phpmyadmin"
+      context: "services/phpmyadmin"
     image: "${PROJECT}_phpmyadmin"
     container_name: "${PROJECT}_phpmyadmin"
     volumes:
@@ -64,7 +61,7 @@ services:
 
   mailhog:
     build:
-      context: "./.docker/mailhog"
+      context: "services/mailhog"
     image: "${PROJECT}_mailhog"
     container_name: "${PROJECT}_mailhog"
     #restart: always
