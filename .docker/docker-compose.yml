@@ -10,7 +10,7 @@ services:
     image: "${PROJECT}_php"
     container_name: "${PROJECT}_php"
     volumes:
-      - ./services/php/conf.d:/usr/local/etc/php/conf.d:ro
+      - ./services/php/config/conf.d:/usr/local/etc/php/conf.d:ro
       - ../service:/var/www/html
     environment:
       MYSQL_USER: ${MYSQL_USER}
@@ -26,7 +26,7 @@ services:
       - "${PMA_PORT}:8080"
     volumes:
       - ../service:/var/www/html
-      - ./services/nginx/conf.d:/etc/nginx/conf.d
+      - ./services/nginx/config/conf.d:/etc/nginx/conf.d
       - ../logs/nginx:/var/log/nginx
       - phpmyadmin-data:/var/www/phpmyadmin
     depends_on:
@@ -41,7 +41,7 @@ services:
     ports:
       - "${DB_PORT}:3306"
     volumes:
-      - ./services/database/conf.d/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./services/database/config/conf.d/my.cnf:/etc/mysql/conf.d/my.cnf
       - database-data:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
