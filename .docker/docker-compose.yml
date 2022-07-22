@@ -5,6 +5,7 @@ services:
   php:
     build:
       context: "services/php"
+      dockerfile: "Dockerfile.${PHP_VERSION}"
       args:
         uid: "${PHP_UID}"
     image: "${PROJECT}_php"
