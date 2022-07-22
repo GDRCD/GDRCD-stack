@@ -1,0 +1,12 @@
+version: "3.8"
+
+services:
+
+  mailhog:
+    build:
+      context: "services/mailhog"
+    image: "${PROJECT}_mailhog"
+    container_name: "${PROJECT}_mailhog"
+    #restart: always
+    ports:
+      - "${MAILHOG_PORT}:8025"

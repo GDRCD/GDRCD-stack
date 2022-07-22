@@ -35,7 +35,7 @@ set +o allexport
 
 # Custom docker-compose command
 function _dc {
-  docker-compose -p "$PROJECT" -f "$_PATH_DOCKER/docker-compose.yml" --env-file "$_PATH_ENV" ${TTY} "$@"
+  docker-compose -p "$PROJECT" -f "$_PATH_DOCKER/docker-compose.yml" -f "$_PATH_DOCKER/docker-compose.$ENV.yml" --env-file "$_PATH_ENV" ${TTY} "$@"
 }
 
 # Check non-existent arguments

@@ -28,7 +28,7 @@ services:
       - ../service:/var/www/html
       - ./services/nginx/conf.d:/etc/nginx/conf.d
       - ../logs/nginx:/var/log/nginx
-      - phpmyadmindata:/var/www/phpmyadmin
+      - phpmyadmin-data:/var/www/phpmyadmin
     depends_on:
       - php
 
@@ -42,7 +42,7 @@ services:
       - "${DB_PORT}:3306"
     volumes:
       - ./services/database/conf.d/my.cnf:/etc/mysql/conf.d/my.cnf
-      - databasedata:/var/lib/mysql
+      - database-data:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
@@ -55,20 +55,11 @@ services:
     image: "${PROJECT}_phpmyadmin"
     container_name: "${PROJECT}_phpmyadmin"
     volumes:
-      - phpmyadmindata:/var/www/html
+      - phpmyadmin-data:/var/www/html
     environment:
       PMA_HOST: database
 
-  mailhog:
-    build:
-      context: "services/mailhog"
-    image: "${PROJECT}_mailhog"
-    container_name: "${PROJECT}_mailhog"
-    #restart: always
-    ports:
-      - "${MAILHOG_PORT}:8025"
-
 # Volumes
 volumes:
-  databasedata:
-  phpmyadmindata:
+  database-data:
+  phpmyadmin-data:
