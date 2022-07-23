@@ -1,0 +1,114 @@
+#!/usr/bin/env bash
+
+# The structure behind this script is based on the following snippet:
+# @source: https://github.com/nickjj/docker-flask-example/blob/main/run
+
+set -eo pipefail
+
+# ---------------------------------------------------------------------
+# Variables
+# ---------------------------------------------------------------------
+
+_PATH_ENV="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"/.env
+_PATH_DOCKER="${_PATH_DOCKER:-$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)}"/.docker
+
+# If we're running in CI we need to disable TTY allocation for docker-compose
+# commands that enable it by default, such as exec and run.
+TTY=""
+if [[ ! -t 1 ]]; then
+  TTY="-T"
+fi
+
+# ---------------------------------------------------------------------
+# Environment
+# ---------------------------------------------------------------------
+
+# environment variables
+set -o allexport
+# shellcheck disable=SC1090
+source "$_PATH_ENV";
+set +o allexport
+
+# -----------------------------------------------------------------------------
+# Helper functions start with _ and aren't listed in this script's help menu.
+# -----------------------------------------------------------------------------
+
+# Custom docker-compose command
+function _dc {
+  docker-compose -p "$PROJECT" -f "$_PATH_DOCKER/docker-compose.yml" -f "$_PATH_DOCKER/docker-compose.$ENV.yml" --env-file "$_PATH_ENV" ${TTY} "$@"
+}
+
+# Check non-existent arguments
+function _isCommand {
+  if ! type "$1" >/dev/null 2>&1; then
+    echo "Command not found: $1"
+    exit 1;
+  fi;
+}
+
+# Check if docker is installed
+_checkDocker() {
+  if ! type "docker" >/dev/null 2>&1; then
+    echo "Docker not found"
+    exit 1;
+  fi;
+}
+
+# Check if environment is set
+_checkEnvironment() {
+  if [[ -z ${ENV+x} ]]; then
+    echo "Environment not set"
+    exit 1;
+  else
+    return 0;
+  fi
+}
+
+# -----------------------------------------------------------------------------
+# Actions
+# -----------------------------------------------------------------------------
+
+# Build the project
+function build {
+  _dc build
+}
+
+# Remove all containers, images, and volumes associated with the project
+function clean {
+  _dc down --rmi all -v --remove-orphans
+}
+
+# Get an help message
+function help {
+  printf "%s <task> [args]\n\nTasks:\n" "${0}"
+  compgen -A function | grep -v "^_" | cat -n
+  printf "\nExtended help:\n  Each task has comments for general usage\n"
+}
+
+# Run the project
+function start {
+  _dc up -d
+}
+
+# Stop the project
+function stop {
+  _dc stop
+}
+
+# Restart the project
+function restart {
+  _dc restart
+}
+
+# ---------------------------------------------------------------------
+# Run the Project
+# ---------------------------------------------------------------------
+
+# !IMPORTANT
+# Execute the action passed as the first argument
+_checkDocker; \
+_checkEnvironment; \
+_isCommand "${1:-help}"; \
+# This idea is heavily inspired by: https://github.com/adriancooney/Taskfile
+TIMEFORMAT=$'\nProcess completed in %3lR'; \
+time "${@:-help}";
