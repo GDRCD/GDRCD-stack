@@ -23,11 +23,13 @@ fi
 # Environment
 # ---------------------------------------------------------------------
 
-# environment variables
-set -o allexport
-# shellcheck disable=SC1090
-source "$_PATH_ENV";
-set +o allexport
+# import env file
+if [[ -f "${_PATH_ENV}" ]]; then
+  # shellcheck source=.env
+  source "${_PATH_ENV}"
+  else
+    echo "Warning! No .env file found, please create one."
+fi
 
 # -----------------------------------------------------------------------------
 # Helper functions start with _ and aren't listed in this script's help menu.
@@ -39,9 +41,9 @@ function _dc {
 }
 
 # Check non-existent arguments
-function _isCommand {
+ _isCommand() {
   if ! type "$1" >/dev/null 2>&1; then
-    echo "Command not found: $1"
+    echo "Warning! Command not found: $1"
     exit 1;
   fi;
 }
@@ -49,7 +51,7 @@ function _isCommand {
 # Check if docker is installed
 _checkDocker() {
   if ! type "docker" >/dev/null 2>&1; then
-    echo "Docker not found"
+    echo "Error: Docker not found"
     exit 1;
   fi;
 }
@@ -57,11 +59,11 @@ _checkDocker() {
 # Check if environment is set
 _checkEnvironment() {
   if [[ -z ${ENV+x} ]]; then
-    echo "Environment not set"
+    echo "Error: ENV variable not set"
     exit 1;
   else
     return 0;
-  fi
+  fi;
 }
 
 # -----------------------------------------------------------------------------
