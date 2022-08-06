@@ -9,8 +9,8 @@ set -eo pipefail
 # Variables
 # ---------------------------------------------------------------------
 
-_PATH_ENV="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"/.env
-_PATH_DOCKER="${_PATH_DOCKER:-$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)}"/.docker
+_PATH_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
+_PATH_DOCKER="$_PATH_DIR/.docker"
 
 # If we're running in CI we need to disable TTY allocation for docker-compose
 # commands that enable it by default, such as exec and run.
@@ -24,11 +24,12 @@ fi
 # ---------------------------------------------------------------------
 
 # import env file
-if [[ -f "${_PATH_ENV}" ]]; then
+if [[ -f "${_PATH_DIR}/.env" ]]; then
   # shellcheck source=.env
-  source "${_PATH_ENV}"
+    source "${_PATH_DIR}/.env"
   else
     echo "Warning! No .env file found, please create one."
+    exit 1;
 fi
 
 # -----------------------------------------------------------------------------
@@ -36,8 +37,8 @@ fi
 # -----------------------------------------------------------------------------
 
 # Custom docker-compose command
-function _dc {
-  docker-compose -p "$PROJECT" -f "$_PATH_DOCKER/docker-compose.yml" -f "$_PATH_DOCKER/docker-compose.$ENV.yml" --env-file "$_PATH_ENV" ${TTY} "$@"
+_dc() {
+  docker-compose -p "$PROJECT" -f "$_PATH_DOCKER/docker-compose.yml" -f "$_PATH_DOCKER/docker-compose.$ENV.yml" --env-file "$_PATH_DIR/.env" ${TTY} "$@"
 }
 
 # Check non-existent arguments
@@ -71,34 +72,34 @@ _checkEnvironment() {
 # -----------------------------------------------------------------------------
 
 # Build the project
-function build {
+build() {
   _dc build
 }
 
 # Remove all containers, images, and volumes associated with the project
-function clean {
+clean() {
   _dc down --rmi all -v --remove-orphans
 }
 
 # Get an help message
-function help {
+help() {
   printf "%s <task> [args]\n\nTasks:\n" "${0}"
   compgen -A function | grep -v "^_" | cat -n
   printf "\nExtended help:\n  Each task has comments for general usage\n"
 }
 
 # Run the project
-function start {
+start() {
   _dc up -d
 }
 
 # Stop the project
-function stop {
+stop() {
   _dc stop
 }
 
 # Restart the project
-function restart {
+restart() {
   _dc restart
 }
 
