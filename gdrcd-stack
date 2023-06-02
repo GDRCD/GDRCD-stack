@@ -38,7 +38,7 @@ fi
 
 # Custom docker-compose command
 _dc() {
-  docker-compose -p "$PROJECT" -f "$_PATH_DOCKER/docker-compose.yml" -f "$_PATH_DOCKER/docker-compose.$ENV.yml" --env-file "$_PATH_DIR/.env" ${TTY} "$@"
+  docker compose -p "$PROJECT" -f "$_PATH_DOCKER/docker-compose.yml" -f "$_PATH_DOCKER/docker-compose.$ENV.yml" --env-file "$_PATH_DIR/.env" ${TTY} "$@"
 }
 
 # Check non-existent arguments
