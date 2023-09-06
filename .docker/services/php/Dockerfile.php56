@@ -1,5 +1,5 @@
-# Create image based on the official PHP-FMP image
-FROM php:5.6-fpm
+    # Create image based on the official PHP-FMP image
+FROM php:5.6-fpm-stretch
 
 # Arguments defined in docker-compose.yml
 ARG uid

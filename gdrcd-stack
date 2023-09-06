@@ -38,7 +38,7 @@ fi
 
 # Custom docker-compose command
 _dc() {
-  docker-compose -p "$PROJECT" -f "$_PATH_DOCKER/docker-compose.yml" -f "$_PATH_DOCKER/docker-compose.$ENV.yml" --env-file "$_PATH_DIR/.env" ${TTY} "$@"
+  docker compose -p "$PROJECT" -f "$_PATH_DOCKER/docker-compose.yml" -f "$_PATH_DOCKER/docker-compose.$ENV.yml" --env-file "$_PATH_DIR/.env" ${TTY} "$@"
 }
 
 # Check non-existent arguments
@@ -53,6 +53,21 @@ _dc() {
 _checkDocker() {
   if ! type "docker" >/dev/null 2>&1; then
     echo "Error: Docker not found"
+    exit 1;
+  fi;
+}
+
+# Check if docker compose is installed
+_checkDockerCompose() {
+  if ! type "docker-compose" >/dev/null 2>&1; then
+    echo "Error: this stack requires Docker Compose v2, please install it and try again"
+    exit 1;
+  fi;
+
+
+  # check if docker compose is installed
+  if ! type "docker compose" >/dev/null 2>&1; then
+    echo "Error: Docker Compose not found"
     exit 1;
   fi;
 }
@@ -110,6 +125,7 @@ restart() {
 # !IMPORTANT
 # Execute the action passed as the first argument
 _checkDocker; \
+_checkDockerCompose; \
 _checkEnvironment; \
 _isCommand "${1:-help}"; \
 # This idea is heavily inspired by: https://github.com/adriancooney/Taskfile
