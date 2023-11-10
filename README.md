@@ -38,7 +38,7 @@ A questo punto, copiare il file `sample.env` in un nuovo file `.env` e compilare
 
 Di seguito le versioni attualmente supportate, con i relativi riferimenti: 
 - PHP 5.6 (php56)
-- PHP 7.3 (php73)
+- PHP 7.4 (php74)
 - PHP 8.0 (php8)
 
 Puoi cambiare la versione PHP utilizzata in qualsiasi momento, cambiando la variabile nel file `.env`  e ricostruendo lo stack.
@@ -99,7 +99,7 @@ Di seguito i comandi a disposizione:
 
 Lo stack mette a disposizione una serie di servizi, che sono:
 - Web Server (nginx)
-- PHP (php56, php73, php8)
+- PHP (php56, php74, php8)
 - MySQL (mysql5.7)
 - PhpMyAdmin (phpmyadmin)
 - Mailhog (mailhog)

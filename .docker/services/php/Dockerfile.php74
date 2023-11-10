@@ -1,5 +1,5 @@
 # Create image based on the official PHP-FMP image
-FROM php:7.3-fpm-buster
+FROM php:7.4-fpm-buster
 
 # Arguments defined in docker-compose.yml
 ARG uid
