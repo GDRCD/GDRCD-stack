@@ -37,25 +37,22 @@ RUN apt-get -y --no-install-recommends install --fix-missing \
 
 # Other PHP5.6 Extensions
 RUN echo "Installing PHP extensions" && \
-    docker-php-ext-install pdo_mysql && \
-    docker-php-ext-install pdo_sqlite && \
-    docker-php-ext-install mysqli && \
-    docker-php-ext-install curl && \
-    docker-php-ext-install tokenizer && \
-    docker-php-ext-install json && \
-    docker-php-ext-install zip && \
-    docker-php-ext-install mbstring && \
-    docker-php-ext-install gettext && \
-    docker-php-ext-install opcache && \
-    docker-php-ext-configure gd --with-freetype=/usr/include --with-jpeg=/usr/include --with-png=/usr/include && \
+    docker-php-ext-install pdo_mysql \
+    pdo_sqlite \
+    mysqli \
+    curl \
+    tokenizer \
+    json \
+    zip \
+    mbstring \
+    gettext \
+    opcache && \
+    docker-php-ext-configure gd --with-freetype=/usr/include --with-jpeg=/usr/include && \
     docker-php-ext-install gd
 
 # Other PHP5.6 Extensions
 RUN echo "Enabling PHP extensions" && \
-    docker-php-ext-enable pdo_mysql && \
-    docker-php-ext-enable pdo_sqlite && \
-    docker-php-ext-enable mysqli && \
-    docker-php-ext-enable zip
+    docker-php-ext-enable pdo_mysql pdo_sqlite mysqli zip
 
 # Install intl extension
 RUN echo "Install PHP Intl" \

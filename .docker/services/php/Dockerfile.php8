@@ -36,15 +36,7 @@ RUN apt-get -y --no-install-recommends install --fix-missing \
 
 # Other PHP5.6 Extensions
 RUN echo "Installing PHP extensions" && \
-    docker-php-ext-install pdo && \
-    docker-php-ext-install pdo_mysql && \
-    docker-php-ext-install mysqli && \
-    docker-php-ext-install curl && \
-    docker-php-ext-install tokenizer && \
-    docker-php-ext-install zip && \
-    docker-php-ext-install mbstring && \
-    docker-php-ext-install gettext && \
-    docker-php-ext-install opcache && \
+    docker-php-ext-install pdo pdo_mysql mysqli curl tokenizer zip mbstring gettext opcache && \
     docker-php-ext-configure \
         # ref: https://github.com/docker-library/php/issues/920#issuecomment-562864296
         gd --enable-gd --with-freetype --with-jpeg --with-webp && \
