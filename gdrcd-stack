@@ -38,7 +38,7 @@ fi
 
 # Custom docker-compose command
 _dc() {
-  docker compose -p "$PROJECT" -f "$_PATH_DOCKER/docker-compose.yml" -f "$_PATH_DOCKER/docker-compose.$ENV.yml" --env-file "$_PATH_DIR/.env" ${TTY} "$@"
+  docker compose -p "$PROJECT" -f "$_PATH_DOCKER/compose.yml" --env-file "$_PATH_DIR/.env" ${TTY} "$@"
 }
 
 # Check non-existent arguments
@@ -71,16 +71,6 @@ _checkDockerCompose() {
     # if docker-compose is installed, suggest to install docker compose v2
     echo "Error: this stack requires Docker Compose v2, please install it and try again"
     exit 1;
-  fi;
-}
-
-# Check if environment is set
-_checkEnvironment() {
-  if [[ -z ${ENV+x} ]]; then
-    echo "Error: ENV variable not set"
-    exit 1;
-  else
-    return 0;
   fi;
 }
 
@@ -128,7 +118,6 @@ restart() {
 # Execute the action passed as the first argument
 _checkDocker; \
 _checkDockerCompose; \
-_checkEnvironment; \
 _isCommand "${1:-help}"; \
 # This idea is heavily inspired by: https://github.com/adriancooney/Taskfile
 TIMEFORMAT=$'\nProcess completed in %3lR'; \
