@@ -26,7 +26,7 @@ git clone https://github.com/GDRCD/GDRCD-stack.git
 Il comando salverà in una cartella `gdrcd-stack` l'intera struttura dello stack. Puoi inserirlo in una cartella a tuo piacimento, aggiungendo in fondo al comando sopra indicato il nome della cartella desiderata (qualora non sia presente, la crea in automatico).
 
 Una volta terminato il salvataggio dei file dello stack, occorre inserire il proprio progetto dentro la cartella `service`. Può essere fatto manualmente, così come attraverso `git`.
-Per chi sta iniziando con un nuovo progetto di GDRCD, sarà sufficiente eseguire i seguenti comandi: 
+Per chi sta iniziando con un nuovo progetto di GDRCD, sarà sufficiente eseguire i seguenti comandi:
 
 ```shell
 cd service # ci si sposta nella cartella del progetto
@@ -36,7 +36,7 @@ git clone https://github.com/GDRCD/GDRCD.git # clona il progetto GDRCD
 A questo punto, copiare il file `sample.env` in un nuovo file `.env` e compilare le varie variabili presenti.
 È molto importante specificare quale versione di PHP si desidera utilizzare, popolando la variabile `PHP_VERSION` con il numero di versione desiderato tra quelle disponibili.
 
-Di seguito le versioni attualmente supportate, con i relativi riferimenti: 
+Di seguito le versioni attualmente supportate, con i relativi riferimenti:
 - PHP 5.6 (php56)
 - PHP 7.4 (php74)
 - PHP 8.0 (php8)
@@ -48,7 +48,7 @@ Ora il tuo GDRCD-Stack è pronto e funzionante!!
 ## Utilizzo
 
 Per facilitare l'utilizzo dello strumento, è stato predisposto il comando `gdrcd-stack` che raccoglie una serie di comandi utili all'esecuzione delle funzioni primarie dello stack.
-Il comando non è altro che un file eseguibile da terminale, motivo per il quale è necessario usare la formula: 
+Il comando non è altro che un file eseguibile da terminale, motivo per il quale è necessario usare la formula:
 
 ```shell
 ./gdrcd-stack <comando>
@@ -82,7 +82,7 @@ Assieme a questi comandi, è stato predisposto anche un comando per rimuovere co
 ./gdrcd-stack clean
 ```
 
-## Comandi Utili 
+## Comandi Utili
 
 Di seguito i comandi a disposizione:
 
@@ -105,11 +105,11 @@ Lo stack mette a disposizione una serie di servizi, che sono:
 - Mailhog (mailhog)
 
 N.B.:
-Il servizio `m̀ailhog` è un servizio di test che permette di visualizzare le email inviate dal sistema e funziona solo in ambiente `dev`.
+Il servizio `mailhog` è un servizio di test che permette di visualizzare le email inviate dal sistema e funziona solo in ambiente `dev`.
 
 ## Segnalazione bug e richieste di aiuto
 
-Prima di aprire una segnalazione bug o una richiesta di aiuto, assicurati che il tuo problema non sia già stato trattato 
+Prima di aprire una segnalazione bug o una richiesta di aiuto, assicurati che il tuo problema non sia già stato trattato
 tra le varie [issues](https://github.com/GDRCD/GDRCD-stack/issues). Se non trovi nulla, puoi aprirne una nuova
 [qui](https://github.com/GDRCD/GDRCD-stack/issues/new).
 
