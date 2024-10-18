@@ -1,7 +1,6 @@
 # GDRCD-Stack
 
-Lo scopo di GDRCD-Stack è di fornire un basilare ambiente di sviluppo per GDRCD, il principale engine Open Source di Giochi di Ruolo play-by-chat,
-fornendo all'utilizzatore tutti gli strumenti necessari per la sua realizzazione.
+Lo scopo di GDRCD-Stack è di fornire un basilare ambiente di sviluppo per [GDRCD](https://github.com/GDRCD/GDRCD), lo Script per la creazione di Giochi di Ruolo "Play by Chat" su browser, fornendo all'utilizzatore tutti gli strumenti necessari per la sua realizzazione.
 
 Questa soluzione è stata pensata prevalentemente per lo sviluppo in locale, tuttavia può essere utilizzato anche per un ambiente di produzione.
 
@@ -13,7 +12,7 @@ Di seguito, gli indirizzi con i riferimenti per l'installazione di questi strume
 - [Docker Desktop (o Docker Toolbox)](https://www.docker.com/products/docker-desktop)
 - [GIT](https://git-scm.com/downloads)
 
-Occorre avere un minimo di dimestichezza con il terminale (come può essere Powershell, la Bash di Linux o il Terminale di macOS) per poter utilizzare lo stack.
+Occorre avere un minimo di dimestichezza con il terminale (come può essere Powershell, la Bash di Linux o il terminale di macOS) per poter utilizzare lo stack.
 
 ## Installazione
 
@@ -23,7 +22,7 @@ Per utilizzare GDRCD-stack, clona il progetto in una qualsiasi cartella sul tuo 
 git clone https://github.com/GDRCD/GDRCD-stack.git
 ```
 
-Il comando salverà in una cartella `gdrcd-stack` l'intera struttura dello stack. Puoi inserirlo in una cartella a tuo piacimento, aggiungendo in fondo al comando sopra indicato il nome della cartella desiderata (qualora non sia presente, la crea in automatico).
+Il comando salverà in una cartella `gdrcd-stack` l'intera struttura. Puoi inserirlo in una cartella a tuo piacimento, aggiungendo in fondo al comando sopra indicato il nome della cartella desiderata (qualora non sia presente, la crea in automatico).
 
 Una volta terminato il salvataggio dei file dello stack, occorre inserire il proprio progetto dentro la cartella `service`. Può essere fatto manualmente, così come attraverso `git`.
 Per chi sta iniziando con un nuovo progetto di GDRCD, sarà sufficiente eseguire i seguenti comandi:
@@ -43,7 +42,7 @@ Di seguito le versioni attualmente supportate, con i relativi riferimenti:
 
 Puoi cambiare la versione PHP utilizzata in qualsiasi momento, cambiando la variabile nel file `.env`  e ricostruendo lo stack.
 
-Ora il tuo GDRCD-Stack è pronto e funzionante!!
+Ora il tuo GDRCD-Stack è pronto e funzionante!
 
 ## Utilizzo
 
