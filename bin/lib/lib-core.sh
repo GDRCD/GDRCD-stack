@@ -51,19 +51,24 @@ SERVICES_VARIANTS=("webserver" "database" "phpmyadmin" "mailhog")
 # Utilities
 # ---------------------------------------------------------------------
 
-# Check if env file exists
-importEnv() {
-  if [[ ! -f "${STACK_DIR}/.env" ]]; then
-    prompt -e "Error! '.env' file is not found. Please create it first."
-    exit 1
-  fi
+checkVersion() {
+  # Get the version from version file
+  local version
+  version=$(cat "${STACK_DIR}/version" | tr -d 'v')
 
-  # shellcheck source=.env
-  source "${STACK_DIR}/.env"
+  # Check if the version is the latest check last release on github
+  local latest_version
+  latest_version=$(curl -s "https://github.com/GDRCD/GDRCD-stack/releases" | grep -o "v[0-9]*\.[0-9]*\.[0-9]*" | head -n 1 | tr -d 'v')
+
+  # Remove the point from the version and compare the two versions
+  if [[ "${version//./}" -lt "${latest_version//./}" ]]; then
+    prompt -w "Warning! A new version is available. Please update the stack."
+    prompt -w "Current version: ${version} - Latest version: ${latest_version}"
+  fi
 }
 
 # ---------------------------------------------------------------------
-# Import Libraries
+# Imports Methods
 # ---------------------------------------------------------------------
 
 importLib() {
@@ -81,5 +86,14 @@ importLib() {
   fi
 }
 
+importEnv() {
+  # Check if env file exists
+  if [[ ! -f "${STACK_DIR}/.env" ]]; then
+    prompt -e "Error! '.env' file is not found. Please create it first."
+    exit 1
+  fi
 
+  # shellcheck source=.env
+  source "${STACK_DIR}/.env"
+}
 
