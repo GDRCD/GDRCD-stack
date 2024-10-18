@@ -1,124 +1,133 @@
 #!/usr/bin/env bash
 
-# The structure behind this script is based on the following snippet:
-# @source: https://github.com/nickjj/docker-flask-example/blob/main/run
+################################################################################
 
-set -eo pipefail
+# WARNING: Please make this shell not working-directory dependant, for example
+# instead of using 'ls blabla', use 'ls "${STACK_DIR}/blabla"'
+#
+# WARNING: Don't use "cd" in this shell, use it in a subshell instead,
+# for example ( cd blabla && do_blabla ) or $( cd .. && do_blabla )
+
+################################################################################
 
 # ---------------------------------------------------------------------
 # Variables
 # ---------------------------------------------------------------------
 
-_PATH_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
-_PATH_DOCKER="$_PATH_DIR/.docker"
+# Check on OS type for stack directory
+# Mac OS
+if [[ "$(uname)" == "Darwin" ]]; then
+  # check if greadlink is installed
+  if ! command -v greadlink &> /dev/null; then
+    echo "greadlink could not be found, please install it with 'brew install coreutils'"; exit 1
+  fi
+  readonly STACK_DIR="$(dirname "$(greadlink -m "${0}")")"
+# Windows
+elif [[ "$(expr substr "$(uname -s)" 1 10)" == "MINGW64_NT" ]]; then
+  readonly STACK_DIR="$(dirname "$(readlink -m "${0}")")"
+# Linux
+else
+  readonly STACK_DIR="$(dirname "$(readlink -m "${0}")")"
+fi
+source "${STACK_DIR}/bin/lib/lib-core.sh"
 
-# If we're running in CI we need to disable TTY allocation for docker-compose
-# commands that enable it by default, such as exec and run.
-TTY=""
-if [[ ! -t 1 ]]; then
-  TTY="-T"
+# ---------------------------------------------------------------------
+# Import Libraries
+# ---------------------------------------------------------------------
+
+importLib "lib/lib-helpify.sh"
+importLib "lib/lib-messages.sh"
+
+importLib "lib/lib-command.sh"
+
+# -----------------------------------------------------------------------------
+# Helpers
+# -----------------------------------------------------------------------------
+
+usage () {
+  # show usage for all commands
+  need_usage4help="true"
+
+  helpify_title "" "[OPTIONS...] COMMAND [OPTIONS...]"
+  helpify_subtitle "It allows you to easily orchestrate the development stack for GDRCD"; echo;
+  helpify_subtitle "OPTIONS:"
+  helpify   "-h, --help"    "Show this help"
+  helpify_separator
+
+  #
+  usageCommands
+
+  #
+  usageServicesCommands
+}
+
+usageService () {
+  # show usage for service commands
+  need_help="true";
+  need_usage4help="true"
+
+  #
+  usageServiceCommands "${1}"
+
+  # force exit
+  exit 0;
+}
+
+# -----------------------------------------------------------------------------
+# Main
+# -----------------------------------------------------------------------------
+
+# Get environment variables
+importEnv
+
+echo;
+
+# If no arguments are passed, show usage
+if [[ $# -eq 0 ]]; then
+  need_help="true";
 fi
 
-# ---------------------------------------------------------------------
-# Environment
-# ---------------------------------------------------------------------
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -h|--help)
+      need_help="true"; shift ;;
+    -*|--*)
+      prompt -e "Error! Unrecognized stack option: ${1}";
+      has_any_error="true"; shift ;;
+    *)
+      # if is a valid command, run it
+      if isCommand "$1" ; then
+        # shellcheck source=bin
+        source "${COMMANDS_DIR}/$1";
+        exit 0;
+      # otherwise, check if is a valid service
+      elif isServiceCommand "$1"; then
+        # check if there is a second argument
+        if [[ $# -gt 1 ]]; then
+          # if is a valid command, run it
+          if isCommand --abs-path "${COMMANDS_DIR}/$1/$2"; then
+            # shellcheck source=bin
+            source "${COMMANDS_DIR}/$1/$2";
+            exit 0;
+          # otherwise, if there is no other entries, show error
+          else
+            prompt -e "Error! Unrecognized $1 command: ${2}"; has_any_error="true";
+            break;
+          fi
+        else
+          usageService "$1" || exit 1
+        fi
+      # otherwise, if there is no other entries, show error
+      else
+        prompt -e "Error! Unrecognized stack command: ${*}"; has_any_error="true";
+        break;
+      fi
+      shift ;;
+  esac
+done
 
-# import env file
-if [[ -f "${_PATH_DIR}/.env" ]]; then
-  # shellcheck source=.env
-    source "${_PATH_DIR}/.env"
-  else
-    echo "Warning! No .env file found, please create one."
-    exit 1;
-fi
+# Execute post argument parsing checks
+finalize_argument_parsing
 
-# -----------------------------------------------------------------------------
-# Helper functions start with _ and aren't listed in this script's help menu.
-# -----------------------------------------------------------------------------
-
-# Custom docker-compose command
-_dc() {
-  docker compose -p "$PROJECT" -f "$_PATH_DOCKER/compose.yml" --env-file "$_PATH_DIR/.env" ${TTY} "$@"
-}
-
-# Check non-existent arguments
- _isCommand() {
-  if ! type "$1" >/dev/null 2>&1; then
-    echo "Warning! Command not found: $1"
-    exit 1;
-  fi;
-}
-
-# Check if docker is installed
-_checkDocker() {
-  if ! command -v docker &> /dev/null; then
-    echo "Error: Docker not found"
-    exit 1;
-  fi;
-}
-
-# Check if docker compose is installed
-_checkDockerCompose() {
-  # check if docker compose is installed
-  if ! command -v docker compose >/dev/null 2>&1; then
-
-    # check if docker-compose is installed
-    if ! command -v docker-compose >/dev/null 2>&1; then
-      echo "Error: Docker Compose not found"
-      exit 1;
-    fi;
-
-    # if docker-compose is installed, suggest to install docker compose v2
-    echo "Error: this stack requires Docker Compose v2, please install it and try again"
-    exit 1;
-  fi;
-}
-
-# -----------------------------------------------------------------------------
-# Actions
-# -----------------------------------------------------------------------------
-
-# Build the project
-build() {
-  _dc build
-}
-
-# Remove all containers, images, and volumes associated with the project
-clean() {
-  _dc down --rmi all -v --remove-orphans
-}
-
-# Get an help message
-help() {
-  printf "%s <task> [args]\n\nTasks:\n" "${0}"
-  compgen -A function | grep -v "^_" | cat -n
-  printf "\nExtended help:\n  Each task has comments for general usage\n"
-}
-
-# Run the project
-start() {
-  _dc up -d
-}
-
-# Stop the project
-stop() {
-  _dc stop
-}
-
-# Restart the project
-restart() {
-  _dc restart
-}
-
-# ---------------------------------------------------------------------
-# Run the Project
-# ---------------------------------------------------------------------
-
-# !IMPORTANT
-# Execute the action passed as the first argument
-_checkDocker; \
-_checkDockerCompose; \
-_isCommand "${1:-help}"; \
-# This idea is heavily inspired by: https://github.com/adriancooney/Taskfile
-TIMEFORMAT=$'\nProcess completed in %3lR'; \
-time "${@:-help}";
+echo;
