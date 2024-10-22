@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+importLib "lib/lib-docker.sh"
+
 # ---------------------------------------------------------------------
 # Variables
 # ---------------------------------------------------------------------
@@ -17,15 +19,15 @@ COMMAND_NAME="${args[0]}"
 
 # Function for showing usage of this command
 usage() {
-  helpify_title "test"
-  helpify_subtitle "test"; echo;
+  helpify_title "start"
+  helpify_subtitle "Start all containers"; echo;
   helpify_subtitle "OPTIONS:"
   helpify "-h, --help"          "Show this help"
 }
 
 # Function for showing usage of this command for help
 usage4help() {
-  helpify "test"       "test"
+  helpify "start"       "Start all containers"
 }
 
 # ---------------------------------------------------------------------
@@ -55,11 +57,15 @@ finalize_argument_parsing
 
 #---------------------------RUN COMMAND-------------------------------#
 
-test() {
-  logo
+start() {
+  # Preliminary checks
+  isContainerExist
+  #
+  prompt -i "Starting all containers..."
+  dockerCompose start
 }
 
 # Run command if this file is the command file
 if [[ "${COMMAND_NAME}" == "${CURRENT_FILE_NAME}" ]]; then
-  test
+  start
 fi

@@ -1,0 +1,128 @@
+#!/usr/bin/env bash
+
+importLib "lib/lib-docker.sh"
+
+# ---------------------------------------------------------------------
+# Variables
+# ---------------------------------------------------------------------
+
+# Get current file name
+CURRENT_FILE_NAME="$(basename "${BASH_SOURCE[0]}")"
+
+# Save command name
+args=("$@")
+COMMAND_NAME="${args[0]}"
+
+# ---------------------------------------------------------------------
+# Messages
+# ---------------------------------------------------------------------
+
+MESSAGE_INSTALL_START="Starting installation...";
+MESSAGE_INSTALL_ALREADY_INSTALLED="Already installed!";
+MESSAGE_INSTALL_SUCCESS="Installation completed!";
+MESSAGE_INSTALL_FAILED="Installation failed!";
+
+MESSAGE_TARGET_NOT_WRITABLE="Target path is not writable with the current user, please check the permissions or run the script as root";
+MESSAGE_TARGET_NOT_DIRECTORY="Target path is not a directory, please check the path or run the script as root";
+
+# ---------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------
+
+usage() {
+  helpify_title "install" "[OPTIONS...]"
+  helpify_subtitle "Install the GDRCD development stack"; echo;
+  helpify_subtitle "OPTIONS:"
+  helpify "-h, --help"          "Show this help"
+  helpify "-t, --target"        "Set the global command installation path"      "[/usr/local/bin]"
+  helpify "-f, --force"         "Force reinstallation of global command"
+}
+
+usage4help() {
+  helpify "install"       "Installing the GDRCD development stack"
+}
+
+# ---------------------------------------------------------------------
+# Main
+# ---------------------------------------------------------------------
+
+#---------------------------PARSE ARGUMENTS-------------------------------#
+
+# Set default values
+target="/usr/local/bin"
+force_reinstall="false"
+
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+  # if the argument is the command name, skip it
+  if [[ "$1" == "${COMMAND_NAME}" ]]; then
+    shift; continue
+  fi
+
+  case "${1}" in
+    -h|--help)
+      need_help="true"; shift ;;
+    -t|--target)
+      target="${2}"; shift; shift ;;
+    -f|--force)
+      force_reinstall="true"; shift ;;
+    *)
+      messageUnknownCommand "$COMMAND_NAME" "$1"; exit 1;;
+  esac
+done
+
+# Execute post argument parsing checks
+finalize_argument_parsing
+
+#---------------------------RUN COMMAND-------------------------------#
+
+install() {
+  message --magenta "${MESSAGE_INSTALL_START}";
+
+  # Check if the target path is a directory
+  if [[ ! -d "$target" ]]; then
+    message --error "${MESSAGE_TARGET_NOT_DIRECTORY}";
+    exit 1;
+  fi;
+
+    # Check if the target path is writable
+    if [[ ! -w "$target" ]]; then
+      message --error "${MESSAGE_TARGET_NOT_WRITABLE}";
+      exit 1;
+    fi;
+
+  # Check if gdrcd-stack is already installed
+  if [[ -f "${target}/${PROJECT}" ]]; then
+    if [[ "${force_reinstall}" == "true" ]]; then
+      rm -f "${target}/${PROJECT}";
+    else
+      message --error "${MESSAGE_INSTALL_ALREADY_INSTALLED}";
+      exit 1;
+    fi;
+  fi;
+
+  # Create the target path if it does not exist
+  if [[ ! -d "$target" ]]; then
+    mkdir -p "$target";
+  fi;
+
+  # Create link to the gdrcd-stack binary
+  ln -sf "${STACK_DIR}/gdrcd-stack" "$target/${PROJECT}" 2>/dev/null;
+
+  # Set the permissions
+  chmod +x "$target/${PROJECT}";
+
+  # Check if the installation was successful
+  if [[ -f "$target/${PROJECT}" ]]; then
+    message --success "${MESSAGE_INSTALL_SUCCESS}";
+  else
+    message --error "${MESSAGE_INSTALL_FAILED}";
+    exit 1;
+  fi;
+}
+
+# Run command if this file is the command file
+if [[ "${COMMAND_NAME}" == "${CURRENT_FILE_NAME}" ]]; then
+  logo;
+  install;
+fi
