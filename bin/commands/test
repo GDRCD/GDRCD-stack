@@ -56,10 +56,10 @@ finalize_argument_parsing
 #---------------------------RUN COMMAND-------------------------------#
 
 test() {
-  echo "Test"
+  logo
 }
 
 # Run command if this file is the command file
 if [[ "${COMMAND_NAME}" == "${CURRENT_FILE_NAME}" ]]; then
-  tests
+  test
 fi
