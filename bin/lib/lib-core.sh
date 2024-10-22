@@ -51,6 +51,10 @@ SERVICES_VARIANTS=("webserver" "database" "phpmyadmin" "mailhog")
 # Utilities
 # ---------------------------------------------------------------------
 
+getVersion() {
+  cat "${STACK_DIR}/version" | tr -d 'v'
+}
+
 checkVersion() {
   # Get the version from version file
   local version

@@ -37,8 +37,7 @@ MESSAGE_NO_ARGUMENTS="No arguments passed!"
 # ---------------------------------------------------------------------
 
 # Echo a message in a specific color
-prompt()
-{
+prompt() {
   case "${1}" in
     "-s")
       echo -e "  ${c_green}${2}${c_default}" ;;       # print success message
@@ -50,12 +49,13 @@ prompt()
       echo -e "  ${c_cyan}${2}${c_default}" ;;        # print info message
     "-il")
       echo -e "  ${c_blue}${2}${c_default}" ;;        # print info low message
+    "-m")
+      echo -e "  ${c_magenta}${2}${c_default}" ;;     # print magenta message
   esac
 }
 
 # Funzione per stampare un messaggio
-message()
-{
+message() {
   # Check if message type is valid
   if [[ ! "${MESSAGE_OPTIONS[*]}" =~ $1 ]]; then
     message --error "Message type '${1}' is not valid"; exit 1
@@ -79,4 +79,15 @@ message()
     "${MESSAGE_OPTIONS_SUCCESS}")
       prompt "-s" "${2}" ;;
   esac
+}
+
+logo() {
+  ascii_art='__   __   __   __   __
+ / _` |  \ |__) /  ` |  \
+ \__> |__/ |  \ \__, |__/'
+  echo -e "  ${c_blue}${ascii_art}${c_default}";
+}
+
+versionInfo() {
+  echo -e "  ${c_cyan}Version: ${c_magenta}$(getVersion)${c_default}";
 }

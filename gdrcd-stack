@@ -48,6 +48,13 @@ usage () {
   # show usage for all commands
   need_usage4help="true"
 
+  # add logo
+  logo
+  # add version info (use function getVersion)
+  versionInfo
+
+  echo;
+
   helpify_title "" "[OPTIONS...] COMMAND [OPTIONS...]"
   helpify_subtitle "It allows you to easily orchestrate the development stack for GDRCD"; echo;
   helpify_subtitle "OPTIONS:"
@@ -82,8 +89,6 @@ importEnv
 
 # Check if the version is up to date
 checkVersion
-
-echo;
 
 # If no arguments are passed, show usage
 if [[ $# -eq 0 ]]; then
@@ -132,6 +137,5 @@ done
 
 # Execute post argument parsing checks
 finalize_argument_parsing
-
 
 echo;
