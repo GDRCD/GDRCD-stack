@@ -45,21 +45,16 @@ isDockerRunning() {
 }
 
 isContainerExist() {
-  # if container name is passed as argument, i check if it exists
+  # if container name is passed as argument, check if it exists
   if [[ "$1" ]]; then
-    if [[ ! "$(docker ps -aq -f name="${PROJECT}_${ENV}_$1")" ]] && [[ ! "$(docker ps -aq -f name="${PROJECT}_$1")" ]]; then
-      prompt -e "Error! Container '${PROJECT}_${ENV}_$1' is not found."
+    if [[ ! "$(docker ps -aq -f name="${PROJECT}_$1")" ]] && [[ ! "$(docker ps -aq -f name="${PROJECT}_$1")" ]]; then
+      prompt -e "Error! Container '${PROJECT}_$1' is not found."
       exit 1
     fi
     return 0;
   fi
-  # otherwise, i check if all containers exist
+  # otherwise, check if all containers exist
   for service in "${SERVICES_VARIANTS[@]}"; do
-    # skipped services
-    if [[ "$service" == "storage" ]]; then
-      continue
-    fi
-
     # database
     if [[ "$service" == "database" ]]; then
       if [[ ! "$(docker ps -aq -f name="${PROJECT}_$service")" ]]; then
@@ -70,8 +65,8 @@ isContainerExist() {
     fi
 
     # other services
-    if [[ ! "$(docker ps -aq -f name="${PROJECT}_${ENV}_$service")" ]]; then
-      prompt -e "Error! Container '${PROJECT}_${ENV}_$service' is not found."
+    if [[ ! "$(docker ps -aq -f name="${PROJECT}_$service")" ]]; then
+      prompt -e "Error! Container '${PROJECT}_$service' is not found."
       exit 1
     fi
   done
@@ -80,8 +75,8 @@ isContainerExist() {
 isContainerRunning() {
   # if container name is passed as argument, i check if it's running
   if [[ "$1" ]]; then
-    if [[ ! "$(docker ps -q -f name="${PROJECT}_${ENV}_$1")" ]] && [[ ! "$(docker ps -q -f name="${PROJECT}_$1")" ]]; then
-      prompt -e "Error! Container '${PROJECT}_${ENV}_$1' is not running."
+    if [[ ! "$(docker ps -q -f name="${PROJECT}_$1")" ]] && [[ ! "$(docker ps -q -f name="${PROJECT}_$1")" ]]; then
+      prompt -e "Error! Container '${PROJECT}_$1' is not running."
       exit 1
     fi
     return 0;
@@ -98,8 +93,8 @@ isContainerRunning() {
       continue
     fi
     # other services
-    if [[ ! "$(docker ps -q -f name="${PROJECT}_${ENV}_$service")" ]]; then
-      prompt -e "Error! Container '${PROJECT}_${ENV}_$service' is not running."
+    if [[ ! "$(docker ps -q -f name="${PROJECT}_$service")" ]]; then
+      prompt -e "Error! Container '${PROJECT}_$service' is not running."
       exit 1
     fi
   done
@@ -115,11 +110,7 @@ dockerCompose() {
   # Check if docker is running
   isDockerRunning
 
-  # Prepare service env variable
-  SERVICES_ENV=${ENV}
-
   export \
-    SERVICES_ENV \
     STACK_DIR ;
-  docker compose -p "${PROJECT}" -f "$DOCKER_DIR/$ENV/compose.yml" -f "$DOCKER_DIR/database/compose.yml" --env-file "$STACK_DIR/.env" "$@"
+  docker compose -p "${PROJECT}" -f "$DOCKER_DIR/compose.yml" -f "$DOCKER_DIR/database/compose.yml" --env-file "$STACK_DIR/.env" "$@"
 }
