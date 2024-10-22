@@ -112,5 +112,5 @@ dockerCompose() {
 
   export \
     STACK_DIR ;
-  docker compose -p "${PROJECT}" -f "$DOCKER_DIR/compose.yml" -f "$DOCKER_DIR/database/compose.yml" --env-file "$STACK_DIR/.env" "$@"
+  docker compose -p "${PROJECT}" -f "$DOCKER_DIR/compose.yml" --env-file "$STACK_DIR/.env" "$@"
 }
