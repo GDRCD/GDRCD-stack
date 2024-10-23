@@ -1,42 +1,31 @@
 services:
 
-  php:
+  webserver:
     build:
-      context: "services/php"
-      dockerfile: "Dockerfile.${PHP_VERSION}"
+      context: "${STACK_DIR}"
+      dockerfile: "${STACK_DIR}/.docker/services/webserver/version/${PHP_VERSION}/Dockerfile"
       args:
         uid: "${PHP_UID}"
-    image: "${PROJECT}_php"
-    container_name: "${PROJECT}_php"
+    image: "${PROJECT}_webserver"
+    container_name: "${PROJECT}_webserver"
+    ports:
+      - "${SERVICE_PORT}:80"
     volumes:
-      - ./services/php/config/conf.d:/usr/local/etc/php/conf.d:ro
-      - ../service:/var/www/html
+      # Log
+      - "${STACK_DIR}/logs/nginx:/var/log/nginx"
+      # PHP
+      - "${STACK_DIR}/.docker/services/webserver/config/conf.d:/usr/local/etc/php/conf.d:ro"
+      # Web
+      - "${STACK_DIR}/www:/var/www"
     environment:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-
-  nginx:
-    build:
-      context: "services/nginx"
-    image: "${PROJECT}_nginx"
-    container_name: "${PROJECT}_nginx"
-    ports:
-      - "${SERVICE_PORT}:80"
-      - "${PMA_PORT}:8080"
-    volumes:
-      - ../service:/var/www/html
-      - ./services/nginx/config/conf.d:/etc/nginx/conf.d
-      - ../logs/nginx:/var/log/nginx
-      - phpmyadmin-data:/var/www/phpmyadmin
-    depends_on:
-      - php
 
   database:
     build:
       context: "services/database"
     image: "${PROJECT}_database"
     container_name: "${PROJECT}_database"
-    #restart: // always;unless-stopped
     ports:
       - "${DB_PORT}:3306"
     volumes:
@@ -48,26 +37,6 @@ services:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
 
-  phpmyadmin:
-    build:
-      context: "services/phpmyadmin"
-    image: "${PROJECT}_phpmyadmin"
-    container_name: "${PROJECT}_phpmyadmin"
-    volumes:
-      - phpmyadmin-data:/var/www/html
-    environment:
-      PMA_HOST: database
-
-  mailhog:
-    build:
-      context: "services/mailhog"
-    image: "${PROJECT}_mailhog"
-    container_name: "${PROJECT}_mailhog"
-    #restart: always
-    ports:
-      - "${MAILHOG_PORT}:8025"
-
 # Volumes
 volumes:
   database-data:
-  phpmyadmin-data:
