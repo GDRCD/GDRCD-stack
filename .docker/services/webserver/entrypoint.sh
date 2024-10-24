@@ -3,7 +3,5 @@ set -e
 
 # PHP > Start services
 service memcached start
-service nginx restart
 php-fpm -D
-
-bash
+nginx -g 'daemon off;'
