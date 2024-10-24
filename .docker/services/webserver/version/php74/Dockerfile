@@ -1,8 +1,9 @@
-# Create image based on the official PHP-FMP image
-FROM php:7.4-fpm-buster
+# -------------------------------------------------------
+# BASE STAGE
+# -------------------------------------------------------
 
-# Arguments defined in docker-compose.yml
-ARG uid
+# Create image based on the official PHP-FMP image
+FROM php:7.4-fpm-buster AS base-stage
 
 # Update the base libraries
 RUN apt-get -y update --fix-missing && apt-get upgrade -y
@@ -35,7 +36,7 @@ RUN apt-get -y --no-install-recommends install --fix-missing \
     libmemcached-dev \
     zlib1g-dev
 
-# Other PHP5.6 Extensions
+# Other PHP Extensions
 RUN echo "Installing PHP extensions" && \
     docker-php-ext-install pdo_mysql \
     pdo_sqlite \
@@ -50,7 +51,7 @@ RUN echo "Installing PHP extensions" && \
     docker-php-ext-configure gd --with-freetype=/usr/include --with-jpeg=/usr/include && \
     docker-php-ext-install gd
 
-# Other PHP5.6 Extensions
+# Other PHP Extensions
 RUN echo "Enabling PHP extensions" && \
     docker-php-ext-enable pdo_mysql pdo_sqlite mysqli zip
 
@@ -60,16 +61,6 @@ RUN echo "Install PHP Intl" \
     && docker-php-ext-install -j$(nproc) intl \
     && docker-php-ext-enable intl \
     && rm -rf /tmp/*
-
-# Install xdebug
-RUN echo "Install xDebug" \
-    && pecl install xdebug-2.9.2 \
-    && docker-php-ext-enable xdebug
-
-# Install redis
-RUN echo "Install Redis" \
-    && pecl install redis-5.3.4 \
-    && docker-php-ext-enable redis
 
 # Install sendmailer for Mailhog
 RUN  curl --location --output /usr/local/bin/mhsendmail https://github.com/mailhog/mhsendmail/releases/download/v0.2.0/mhsendmail_linux_amd64  \
@@ -82,20 +73,43 @@ RUN apt-get remove -y libmcrypt-dev libicu-dev libpng-dev libjpeg-dev libfreetyp
   && rm -rf /var/lib/apt/lists/* \
   && rm -rf /tmp/*
 
+# -------------------------------------------------------
+# SERVE STAGE
+# -------------------------------------------------------
 
-# Add user for web application
-RUN groupadd -g $uid www
-RUN useradd -u $uid -ms /bin/bash -g www www
+# Get API Base Image
+FROM base-stage AS serve-stage
 
-# Copy existing application directory contents
-COPY . /var/www/html
+# Arguments defined in compose.yml
+ARG uid
 
-# Copy existing application directory permissions
-COPY --chown=www:www . /var/www/html
+# Install serve dependencies
+RUN apt-get update \
+    && apt-get upgrade -y \
+    && apt-get -y --no-install-recommends install \
+    nginx \
+    memcached \
+    ssl-cert
 
-# Change current user to www
-USER www
+# Clean up, try to reduce image size
+RUN apt-get autoremove -y \
+    && apt-get clean all \
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /tmp/*
 
-# Expose port 9000 and start php-fpm server
-EXPOSE 9000
-CMD ["php-fpm"]
+# Generate ssl certificate
+RUN make-ssl-cert generate-default-snakeoil --force-overwrite
+
+# Copy nginx config
+COPY .docker/services/webserver/config/sites-available/default.nginx /etc/nginx/sites-available/default
+
+# Copy entrypoint
+COPY .docker/services/webserver/entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/entrypoint.sh
+RUN ln -s /usr/local/bin/entrypoint.sh /
+
+# Specify the entrypoint
+ENTRYPOINT ["entrypoint.sh"]
+
+# Set working dir
+WORKDIR /var/www/html
