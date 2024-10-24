@@ -112,4 +112,4 @@ RUN ln -s /usr/local/bin/entrypoint.sh /
 ENTRYPOINT ["entrypoint.sh"]
 
 # Set working dir
-WORKDIR /var/www
+WORKDIR /var/www/html
