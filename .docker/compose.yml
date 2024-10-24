@@ -16,7 +16,7 @@ services:
       # PHP
       - "${STACK_DIR}/.docker/services/webserver/config/conf.d:/usr/local/etc/php/conf.d:ro"
       # Web
-      - "${STACK_DIR}/www:/var/www"
+      - "${STACK_DIR}/www:/var/www/html"
     environment:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
